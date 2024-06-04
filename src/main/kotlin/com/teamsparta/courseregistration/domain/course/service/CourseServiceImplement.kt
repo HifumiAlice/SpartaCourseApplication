@@ -23,6 +23,7 @@ import com.teamsparta.courseregistration.domain.lecture.model.Lecture
 import com.teamsparta.courseregistration.domain.lecture.model.toResponse
 import com.teamsparta.courseregistration.domain.lecture.repository.LectureRepository
 import com.teamsparta.courseregistration.domain.user.repository.UserRepository
+import com.teamsparta.courseregistration.infra.aop.StopWatch
 import jakarta.transaction.Transactional
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
@@ -37,12 +38,15 @@ class CourseServiceImplement(
     private val courseApplicationRepository: CourseApplicationRepository,
     private val userRepository: UserRepository
 ) : CourseService {
+
+    @StopWatch
     override fun getAllCourseList(): List<CourseResponse> {
         // TODO : DB에서 모든 Course를 가져와서 CourseResponse로 변환 후 반환
 
         return courseRepository.findAll().map { it.toResponse() }
     }
 
+    @StopWatch
     override fun getCourseById(courseId: Long): CourseResponse {
         // TODO: 만약 courseId에 해당하는 Course가 없다면 throw ModelNotFoundException
         // TODO : DB에서 courseId에 해당하는 Course를 가져와서 CourseResponse로 변환 후 반환
