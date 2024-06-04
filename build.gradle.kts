@@ -36,7 +36,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa") // transaction 및 jpa 연결
 //    implementation("com.h2database:h2")  // db 연결하기 때문에 지움
     runtimeOnly("org.postgresql:postgresql") // postgre db 연결
-
+    // 스프링 심화부터 추가
+    implementation("org.springframework.boot:spring-boot-starter-aop")
 
     // ====================
 
