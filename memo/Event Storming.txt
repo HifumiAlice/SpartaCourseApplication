@@ -1,0 +1,133 @@
+온라인에서 강의를 신청할 수 있는 수강신청 Application 설계
+
+1. 요소 별 영역 설정
+- Actor
+- Event
+- Command
+- Policy
+- External System
+- Hotspot
+- Aggregate
+- Data
+
+2. Actor 정의
+- Actor
+    - Student
+    - Teacher
+
+3. Domain Event 나열
+    유저
+    수강생의 회원가입
+    수강생의 로그인, 로그아웃, 프로필 설정 및 수정
+    선생의 회원가입, 로그인, 로그아웃, 프로필 설정 및 수정
+    수강생 및 선생의 회원 탈퇴
+
+    강의
+    강좌가 필요 --> Course로 지정함
+    강좌 안에 강의 영상이 필요함 --> Lecture로 지정
+    Course의 생성 및 수정, 조회, 삭제
+    Course에 Lecture를 추가함 --> Policy 규정
+    Lecture의 생성 및 수정, 조회, 삭제
+    ** 강의 영상을 갖고 있을건지 Youtube에 올려서 보여줄 건지 선택 --> Hotspot
+
+    수강신청
+    수강 신청하기
+    수강신청 승인 및 거절
+    일정 인원이 되면 마감 --> Policy
+
+4. Command 설정
+
+    Domain Event에서 생각한 것을 Command로 만들어야 함
+
+5. External System
+    현재는 External System이 존재하지 않음
+
+
+6. Actor
+    Actor는 Command를 수행하는 주체이다.
+    Command를 Student와 Teacher 중에서 누가 수행할지 정하면 된다.
+
+7. Event Grouping 및 Model, Aggregate 정의
+    비슷한 Event끼리 Grouping 하기
+    Aggregate 정의하기
+
+8. Bounded Context 정의
+    Bounded Context는 시스템적으로 범위를 나누고 이를 결국 조직 구조 혹은
+    Architecture를 나누기 위해 사용한다.
+
+9. Data 정의
+    User, Course, Lecture, Course Application 모델등을 정의햇다.
+    각 모델이 담고 있는 Data를 정의하면 아래와 같다.
+    User
+    - Id
+    - Email
+    - Password
+    - Nickname
+    - role
+
+    Course
+    - Id
+    - Title
+    - Explain
+    - Status
+    - MaxPeople
+    - CurrentPeople
+    - Lecture List
+    - CourseApplication List
+
+    Lecture
+    - Id
+    - Title
+    - Video Url
+
+    CourseApplication
+    - Id
+    - User
+    - Course
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
