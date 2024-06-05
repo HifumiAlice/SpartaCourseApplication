@@ -20,4 +20,9 @@ class GlobalExceptionHandler {
             .body(ErrorResponse(e.message))
     }
 
+    @ExceptionHandler(InvalidCredentialException::class)
+    fun handleInvalidCredentialException(e : InvalidCredentialException) : ResponseEntity<ErrorResponse> {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ErrorResponse(e.message))
+    }
+
 }
