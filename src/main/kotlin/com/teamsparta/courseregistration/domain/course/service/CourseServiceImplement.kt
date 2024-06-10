@@ -39,14 +39,14 @@ class CourseServiceImplement(
     private val userRepository: UserRepository
 ) : CourseService {
 
-    @StopWatch
+//    @StopWatch
     override fun getAllCourseList(): List<CourseResponse> {
         // TODO : DB에서 모든 Course를 가져와서 CourseResponse로 변환 후 반환
 
         return courseRepository.findAll().map { it.toResponse() }
     }
 
-    @StopWatch
+//    @StopWatch
     override fun getCourseById(courseId: Long): CourseResponse {
         // TODO: 만약 courseId에 해당하는 Course가 없다면 throw ModelNotFoundException
         // TODO : DB에서 courseId에 해당하는 Course를 가져와서 CourseResponse로 변환 후 반환

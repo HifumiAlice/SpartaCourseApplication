@@ -13,12 +13,13 @@ import java.util.*
 
 @Component
 class JwtPlugin(
-    @Value("\${auth.jwt.issure}") private val issuer: String,
-    @Value("\${auth.jwt.secret}") private val secret: String,
-    @Value("\${auth.jwt.accessTokenExpirationHour}") private val accessTokenExpirationHour: Long
+    @Value("\${auth.jwt.issuer}")
+    private val issuer: String,
+    @Value("\${auth.jwt.secret}")
+    private val secret: String,
+    @Value("\${auth.jwt.accessTokenExpirationHour}")
+    private val accessTokenExpirationHour: Long
 ) {
-//    private val accessTokenExpirationHour = 168L
-//    private val secret = "PO4c8z41Hia5gJG3oeuFJMRYBB4Ws4aZ1"
 
     fun validateToken(jwt: String): Result<Jws<Claims>> {
         return kotlin.runCatching {
@@ -47,8 +48,6 @@ class JwtPlugin(
             .claims(claims)
             .signWith(key)
             .compact()
-
-
     }
 
 }
