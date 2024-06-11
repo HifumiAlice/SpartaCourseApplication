@@ -14,7 +14,6 @@ import com.teamsparta.courseregistration.domain.courseapplication.model.CourseAp
 import com.teamsparta.courseregistration.domain.courseapplication.model.CourseApplicationStatus
 import com.teamsparta.courseregistration.domain.courseapplication.model.toResponse
 import com.teamsparta.courseregistration.domain.courseapplication.repository.CourseApplicationRepository
-import com.teamsparta.courseregistration.domain.exception.ErrorResponse
 import com.teamsparta.courseregistration.domain.exception.ModelNotFoundException
 import com.teamsparta.courseregistration.domain.lecture.dto.CreateLecture
 import com.teamsparta.courseregistration.domain.lecture.dto.LectureResponse
@@ -23,35 +22,36 @@ import com.teamsparta.courseregistration.domain.lecture.model.Lecture
 import com.teamsparta.courseregistration.domain.lecture.model.toResponse
 import com.teamsparta.courseregistration.domain.lecture.repository.LectureRepository
 import com.teamsparta.courseregistration.domain.user.repository.UserRepository
-import com.teamsparta.courseregistration.infra.aop.StopWatch
 import jakarta.transaction.Transactional
 import org.springframework.data.repository.findByIdOrNull
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
-import org.springframework.web.bind.annotation.ExceptionHandler
 
 @Service
 class CourseServiceImplement(
     private val courseRepository: CourseRepository,
     private val lectureRepository: LectureRepository,
     private val courseApplicationRepository: CourseApplicationRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
 ) : CourseService {
 
-//    @StopWatch
+    override fun searchTitleList(title: String): List<CourseResponse> {
+        return courseRepository.searchCourseListByTitle(title).map { it.toResponse() }
+    }
+
+
+    //    @StopWatch
     override fun getAllCourseList(): List<CourseResponse> {
         // TODO : DB에서 모든 Course를 가져와서 CourseResponse로 변환 후 반환
 
         return courseRepository.findAll().map { it.toResponse() }
     }
 
-//    @StopWatch
+    //    @StopWatch
     override fun getCourseById(courseId: Long): CourseResponse {
         // TODO: 만약 courseId에 해당하는 Course가 없다면 throw ModelNotFoundException
         // TODO : DB에서 courseId에 해당하는 Course를 가져와서 CourseResponse로 변환 후 반환
 
-        val course = courseRepository.findByIdOrNull(courseId) ?: throw ModelNotFoundException("Course",courseId)
+        val course = courseRepository.findByIdOrNull(courseId) ?: throw ModelNotFoundException("Course", courseId)
         return course.toResponse()
 //        return courseRepository.findByIdOrNull(courseId)?.toResponse() ?: throw ModelNotFoundException("Course",courseId)
     }
@@ -75,8 +75,8 @@ class CourseServiceImplement(
         // TODO: 만약 courseId에 해당하는 Course가 없다면 throw ModelNotFoundException
         // TODO : courseId로 DB에서 찾아서 request로 업데이트
 
-        val course = courseRepository.findByIdOrNull(courseId) ?: throw ModelNotFoundException("Course",courseId)
-        val (title,description) = request
+        val course = courseRepository.findByIdOrNull(courseId) ?: throw ModelNotFoundException("Course", courseId)
+        val (title, description) = request
 
         course.title = title
         course.description = description
@@ -91,7 +91,8 @@ class CourseServiceImplement(
         // TODO: 만약 courseId에 해당하는 Course가 없다면 throw ModelNotFoundException
         // TODO : DB에서 courseId에 해당하는 Course를 삭제, 연관된 CourseApplication, Lecture 모두 삭제
 
-        val course : Course = courseRepository.findByIdOrNull(courseId) ?: throw ModelNotFoundException("Course",courseId)
+        val course: Course =
+            courseRepository.findByIdOrNull(courseId) ?: throw ModelNotFoundException("Course", courseId)
 
 //        courseRepository.deleteById(course.id!!)
         courseRepository.delete(course)
@@ -103,7 +104,7 @@ class CourseServiceImplement(
         // TODO : 만약 courseId에 해당하는 Course가 없다면 throw ModelNotFoundException
         // TODO: DB에서 courseId에 해당하는 Course를 가져와서 Lecture를 추가 후 DB에 저장, 결과를을 LectureResponse로 변환 후 반환
 
-        val course = courseRepository.findByIdOrNull(courseId) ?: throw ModelNotFoundException("Course",courseId)
+        val course = courseRepository.findByIdOrNull(courseId) ?: throw ModelNotFoundException("Course", courseId)
 
         val lecture = Lecture(
             title = request.title,
@@ -128,7 +129,7 @@ class CourseServiceImplement(
 //        val course = courseRepository.findByIdOrNull(courseId) ?: throw ModelNotFoundException("Course", courseId)
 //        return course.lectures.map { it.toResponse() }
 
-        return lectureRepository.findAllByCourseId(courseId).map {it.toResponse()}
+        return lectureRepository.findAllByCourseId(courseId).map { it.toResponse() }
 
     }
 
@@ -140,7 +141,7 @@ class CourseServiceImplement(
         // 양방향
 //        val lecture = lectureRepository.findByCourseIdAndId(courseId,lectureId) ?: throw ModelNotFoundException("Lecutre",lectureId)
         // ========================
-        val lecture = lectureRepository.findByIdOrNull(lectureId) ?: throw ModelNotFoundException("Lecture",lectureId)
+        val lecture = lectureRepository.findByIdOrNull(lectureId) ?: throw ModelNotFoundException("Lecture", lectureId)
 
         return lecture.toResponse()
     }
@@ -155,7 +156,7 @@ class CourseServiceImplement(
         // 양방향
 //        val lecture = lectureRepository.findByCourseIdAndId(courseId, lectureId) ?: throw ModelNotFoundException("Lecture",lectureId)
         // ======================
-        val lecture = lectureRepository.findByIdOrNull(lectureId) ?: throw ModelNotFoundException("Lecture",lectureId)
+        val lecture = lectureRepository.findByIdOrNull(lectureId) ?: throw ModelNotFoundException("Lecture", lectureId)
         lecture.title = request.title
         lecture.videoUrl = request.videoUrl
 
@@ -168,8 +169,8 @@ class CourseServiceImplement(
         // TODO: 만약 courseId에 해당하는 Course가 없다면 throw ModelNotFoundException
         // TODO: DB에서 courseId, lectureId에 해당하는 Lecture를 가져오고, 삭제
 
-        val course = courseRepository.findByIdOrNull(courseId) ?: throw ModelNotFoundException("Course",courseId)
-        val lecture = lectureRepository.findByIdOrNull(lectureId) ?: throw ModelNotFoundException("Lecture",lectureId)
+        val course = courseRepository.findByIdOrNull(courseId) ?: throw ModelNotFoundException("Course", courseId)
+        val lecture = lectureRepository.findByIdOrNull(lectureId) ?: throw ModelNotFoundException("Lecture", lectureId)
         lectureRepository.delete(lecture)
         lectureRepository.save(lecture)
 //        course.removeLecture(lecture)
@@ -183,9 +184,9 @@ class CourseServiceImplement(
         // TODO: 이미 신청했다면, throw IllegalStateException
 
         val user = userRepository.findByIdOrNull(request.userId) ?: throw ModelNotFoundException("User", request.userId)
-        val course = courseRepository.findByIdOrNull(courseId) ?: throw ModelNotFoundException("Course",courseId)
+        val course = courseRepository.findByIdOrNull(courseId) ?: throw ModelNotFoundException("Course", courseId)
 
-        if(course.isClosed()){
+        if (course.isClosed()) {
             throw IllegalStateException("Course is already closed. courseId: $courseId")
         }
 
@@ -193,7 +194,7 @@ class CourseServiceImplement(
             throw IllegalStateException("Already applied. courseId: $courseId, userId: ${request.userId}")
         }
 
-        val courseApplication = CourseApplicants (
+        val courseApplication = CourseApplicants(
             course = course,
             user = user
         )

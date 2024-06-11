@@ -11,10 +11,9 @@ import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
 
 
-
 @Component
 class JwtAuthenticationFilter(
-    private val jwtPlugin : JwtPlugin
+    private val jwtPlugin: JwtPlugin
 ) : OncePerRequestFilter() {
     companion object {
         private val BEARER_PATTERN = Regex("^Bearer (.+?)$")
@@ -24,7 +23,7 @@ class JwtAuthenticationFilter(
         request: HttpServletRequest,
         response: HttpServletResponse,
         filterChain: FilterChain
-    ){
+    ) {
         val jwt = request.getBearerToken()
 
         if (jwt != null) {

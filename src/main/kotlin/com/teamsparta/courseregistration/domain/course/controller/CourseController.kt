@@ -13,6 +13,13 @@ import org.springframework.web.bind.annotation.*
 @RestController
 class CourseController(private val courseService: CourseService) {
 
+    @PreAuthorize("hasRole('STUDENT') or hasRole('TUTOR')")
+    @GetMapping("/search")
+    fun searchTitle(@RequestParam(name = "title") title: String): ResponseEntity<List<CourseResponse>> {
+        return ResponseEntity.ok(courseService.searchTitleList(title))
+    }
+
+
     @PreAuthorize("hasRole('TUTOR') or hasRole('STUDENT')")
     @GetMapping("/{courseId}")
     fun getCourse(@PathVariable courseId: Long): ResponseEntity<CourseResponse> {
