@@ -6,6 +6,8 @@ plugins {
     kotlin("jvm") version "1.9.23"
     kotlin("plugin.spring") version "1.9.23"
     kotlin("plugin.noarg")  version "1.8.22"
+    kotlin("plugin.allopen") version "1.8.22"
+    kotlin("kapt") version "1.8.22"
 }
 
 group = "com.teamsparta"
@@ -25,6 +27,7 @@ repositories {
     mavenCentral()
 }
 
+val queryDslVersion = "5.0.0"
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
@@ -37,11 +40,15 @@ dependencies {
 //    implementation("com.h2database:h2")  // db 연결하기 때문에 지움
     runtimeOnly("org.postgresql:postgresql") // postgre db 연결
     // 스프링 심화부터 추가
+    // 시큐리티 및 jwt
     implementation("org.springframework.boot:spring-boot-starter-aop")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("io.jsonwebtoken:jjwt-api:0.12.3")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.3")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.3")
+    // Query DSL
+    implementation("com.querydsl:querydsl-jpa:$queryDslVersion:jakarta") // 추가!
+    kapt("com.querydsl:querydsl-apt:$queryDslVersion:jakarta") // 추가!
     // ====================
 
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
