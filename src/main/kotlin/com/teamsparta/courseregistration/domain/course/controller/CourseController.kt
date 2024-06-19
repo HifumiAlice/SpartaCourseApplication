@@ -4,6 +4,9 @@ import com.teamsparta.courseregistration.domain.course.dto.CourseResponse
 import com.teamsparta.courseregistration.domain.course.dto.CreateCourseRequest
 import com.teamsparta.courseregistration.domain.course.dto.UpdateCourseRequest
 import com.teamsparta.courseregistration.domain.course.service.CourseService
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
@@ -12,6 +15,17 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/courses")
 @RestController
 class CourseController(private val courseService: CourseService) {
+
+    @GetMapping("/page")
+    @PreAuthorize("hasRole('TUTOR') or hasRole('STUDENT')")
+    fun getPaginatedCourseList(
+        @PageableDefault(size = 15, sort = ["id"]) pageable: Pageable,
+        @RequestParam(value = "status", required = false) status: String?
+        ) : ResponseEntity<Page<CourseResponse>> {
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(courseService.getPaginatedCourseList(pageable, status))
+    }
 
     @PreAuthorize("hasRole('STUDENT') or hasRole('TUTOR')")
     @GetMapping("/search")

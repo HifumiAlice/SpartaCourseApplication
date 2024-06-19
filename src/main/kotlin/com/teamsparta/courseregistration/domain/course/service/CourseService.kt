@@ -9,6 +9,8 @@ import com.teamsparta.courseregistration.domain.courseapplication.dto.UpdateAppl
 import com.teamsparta.courseregistration.domain.lecture.dto.CreateLecture
 import com.teamsparta.courseregistration.domain.lecture.dto.LectureResponse
 import com.teamsparta.courseregistration.domain.lecture.dto.UpdateLecture
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 
 
 interface CourseService {
@@ -49,5 +51,6 @@ interface CourseService {
     ): CourseApplicationResponse
 
     fun searchTitleList(title: String): List<CourseResponse>
+    fun getPaginatedCourseList(pageable: Pageable, status: String?): Page<CourseResponse>
 
 }

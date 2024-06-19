@@ -23,6 +23,8 @@ import com.teamsparta.courseregistration.domain.lecture.model.toResponse
 import com.teamsparta.courseregistration.domain.lecture.repository.LectureRepository
 import com.teamsparta.courseregistration.domain.user.repository.UserRepository
 import jakarta.transaction.Transactional
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
@@ -33,6 +35,18 @@ class CourseServiceImplement(
     private val courseApplicationRepository: CourseApplicationRepository,
     private val userRepository: UserRepository,
 ) : CourseService {
+
+
+    override fun getPaginatedCourseList(pageable: Pageable, status: String?): Page<CourseResponse> {
+        val courseStatus = when (status) {
+            "OPEN" -> CourseStatus.OPEN
+            "CLOSED" -> CourseStatus.CLOSED
+            null -> null
+            else -> throw IllegalArgumentException("The status is invalid")
+        }
+        return courseRepository.findByPageableAndStatus(pageable, courseStatus).map{it.toResponse()}
+    }
+
 
     override fun searchTitleList(title: String): List<CourseResponse> {
         return courseRepository.searchCourseListByTitle(title).map { it.toResponse() }
